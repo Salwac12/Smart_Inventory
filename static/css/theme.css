@@ -1,0 +1,678 @@
+/* ==========================================
+   SMART INVENTORY
+   PREMIUM CORPORATE THEME
+   ========================================== */
+
+
+/* DESIGN SYSTEM */
+
+:root {
+
+    --background: #f3f5f9;
+    --white: #ffffff;
+    --card: #ffffff;
+
+    --text: #111827;
+    --muted: #64748b;
+
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+
+    --green: #059669;
+    --red: #dc2626;
+    --orange: #d97706;
+
+    --dark: #111827;
+    --sidebar: #111827;
+
+    --border: #e2e8f0;
+
+    --radius: 14px;
+
+    --shadow:
+        0 2px 8px rgba(15, 23, 42, 0.025),
+        0 8px 28px rgba(15, 23, 42, 0.035);
+
+}
+
+
+/* GLOBAL */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* TYPOGRAPHY */
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--text);
+    letter-spacing: -0.4px;
+}
+
+p {
+    line-height: 1.7;
+}
+
+
+/* HEADER */
+
+.header {
+    background: var(--dark);
+
+    padding: 27px 38px;
+
+    border-bottom: 1px solid #273449;
+}
+
+.header h1 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.header p {
+    color: #94a3b8;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+    background: var(--sidebar);
+    border-right: 1px solid #293449;
+}
+
+.brand-name {
+    color: #ffffff;
+    letter-spacing: -0.6px;
+}
+
+.nav-link {
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-link:hover {
+    background: #1e293b;
+}
+
+.nav-link.active {
+    background: var(--primary);
+}
+
+
+/* MAIN LAYOUT */
+
+.container,
+.main {
+    position: relative;
+}
+
+
+/* CARDS */
+
+.card,
+.stat-card,
+.summary-card,
+.action-card,
+.panel,
+.bom-card,
+.component-card,
+.workflow-card,
+.save-section {
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+/* CARD HOVER */
+
+.action-card:hover,
+.bom-card:hover,
+.summary-card:hover,
+.stat-card:hover {
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 8px 28px rgba(15, 23, 42, 0.075);
+
+}
+
+
+/* BUTTONS */
+
+.btn,
+.action-button,
+.nav-button,
+.table-action {
+
+    font-family: inherit;
+
+    border-radius: 9px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+
+/* PRIMARY BUTTONS */
+
+.btn-primary,
+.action-button,
+.btn.btn-primary {
+
+    background: var(--primary);
+    color: #ffffff;
+
+}
+
+.btn-primary:hover,
+.action-button:hover {
+
+    background: var(--primary-hover);
+}
+
+
+/* SUCCESS BUTTONS */
+
+.btn-green,
+.action-button.green,
+.download-button {
+
+    background: var(--green);
+    color: #ffffff;
+
+}
+
+.btn-green:hover,
+.download-button:hover {
+    background: #047857;
+}
+
+
+/* DANGER BUTTONS */
+
+.btn-red {
+    background: var(--red);
+    color: #ffffff;
+}
+
+
+/* SECONDARY BUTTONS */
+
+.btn-gray {
+    background: #475569;
+    color: #ffffff;
+}
+
+
+/* BUTTON HOVER */
+
+.btn:hover,
+.action-button:hover {
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.12);
+
+}
+
+
+/* BUTTON FOCUS */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+
+}
+
+
+/* FORM INPUTS */
+
+input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    font-family: inherit;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+/* INPUT FOCUS */
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.1);
+
+}
+
+
+/* INPUT PLACEHOLDERS */
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+
+/* TABLES */
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+
+    background: #f8fafc;
+
+    color: #475569;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1px;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+td {
+    border-bottom: 1px solid #edf2f7;
+}
+
+tbody tr {
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: #f8faff;
+}
+
+
+/* TABLE CONTAINERS */
+
+.table-wrapper {
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    overflow-x: auto;
+
+}
+
+
+/* STATUS BADGES */
+
+.status-badge,
+.badge {
+
+    border-radius: 30px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.1px;
+
+}
+
+
+/* SUCCESS */
+
+.status-sufficient,
+.status-matched,
+.badge-green,
+.badge-in {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+/* WARNING */
+
+.status-low,
+.status-unmatched,
+.badge-orange {
+
+    background: #fef3c7;
+
+    color: #92400e;
+
+}
+
+
+/* DANGER */
+
+.status-out,
+.badge-red,
+.badge-out {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* INFORMATION BOXES */
+
+.info,
+.info-box,
+.alert-info {
+
+    background: #eff6ff;
+
+    border: 1px solid #dbeafe;
+
+    color: #1e40af;
+
+    border-radius: 10px;
+
+}
+
+
+/* SUCCESS ALERTS */
+
+.alert-success {
+
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    color: #065f46;
+
+    border-radius: 10px;
+
+}
+
+
+/* ERROR ALERTS */
+
+.alert-error {
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    border-radius: 10px;
+
+}
+
+
+/* WARNING ALERTS */
+
+.alert-warning {
+
+    background: #fffbeb;
+
+    border: 1px solid #fde68a;
+
+    color: #92400e;
+
+    border-radius: 10px;
+
+}
+
+
+/* FILTER BUTTONS */
+
+.filter-button {
+
+    background: #ffffff;
+
+    color: #475569;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+}
+
+.filter-button:hover {
+
+    background: #eff6ff;
+
+    border-color: #bfdbfe;
+
+}
+
+.filter-button.active {
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    border-color: var(--primary);
+
+}
+
+
+/* SECTION LABELS */
+
+.step-label {
+
+    background: #eff6ff;
+
+    color: var(--primary);
+
+    border-radius: 30px;
+
+}
+
+
+/* COMPONENT CARDS */
+
+.component-card {
+
+    border-radius: 13px;
+
+    overflow: hidden;
+
+}
+
+.component-card.is-matched {
+    border-left: 4px solid var(--green);
+}
+
+.component-card.is-unmatched {
+    border-left: 4px solid var(--orange);
+}
+
+
+/* WORKFLOW STEPS */
+
+.workflow-step {
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 11px;
+
+}
+
+
+/* PROGRESS BARS */
+
+.progress-track {
+    background: #e2e8f0;
+}
+
+.progress-fill {
+    background: var(--green);
+}
+
+
+/* SUMMARY VALUES */
+
+.summary-value,
+.stat-value {
+
+    font-weight: 750;
+
+    letter-spacing: -0.7px;
+
+}
+
+
+/* STOCK OPERATION CARDS */
+
+.operation-button {
+
+    border-radius: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+
+}
+
+.operation-button.active-in {
+
+    background: #ecfdf5;
+
+    border-color: var(--green);
+
+}
+
+.operation-button.active-out {
+
+    background: #fef2f2;
+
+    border-color: var(--red);
+
+}
+
+
+/* EMPTY STATES */
+
+.empty-state {
+    color: var(--muted);
+}
+
+.empty-state h3,
+.empty-state h4 {
+    color: var(--text);
+}
+
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: #cbd5e1;
+
+    border-radius: 20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .header {
+        padding: 22px;
+    }
+
+    .card,
+    .summary-card,
+    .stat-card {
+        border-radius: 11px;
+    }
+
+    .container {
+        width: 96%;
+    }
+
+}
+
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+
+}

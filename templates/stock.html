@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Management | Smart Inventory</title>
+
+    <style>
+
+        :root {
+            --background: #f4f6fa;
+            --white: #ffffff;
+            --text: #192336;
+            --muted: #718096;
+            --primary: #3159d9;
+            --green: #15966d;
+            --red: #dc4b53;
+            --border: #e5eaf1;
+            --dark: #172033;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 25px 35px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 94%;
+            max-width: 1050px;
+            margin: 30px auto;
+        }
+
+        /* NAVIGATION */
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .nav-button {
+            background: white;
+            color: #334155;
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background: #edf2ff;
+            color: var(--primary);
+        }
+
+        /* PAGE TITLE */
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            font-size: 28px;
+            margin: 0 0 9px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: white;
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+            font-size: 20px;
+        }
+
+        .description {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+
+        /* OPERATION SELECTION */
+
+        .operation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .operation-button {
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .operation-button:hover {
+            border-color: #b7c6f7;
+        }
+
+        .operation-button.active-in {
+            border-color: var(--green);
+            background: #f0fdf4;
+        }
+
+        .operation-button.active-out {
+            border-color: var(--red);
+            background: #fff5f5;
+        }
+
+        .operation-icon {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .operation-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .operation-description {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .green-text {
+            color: var(--green);
+        }
+
+        .red-text {
+            color: var(--red);
+        }
+
+        /* FORM */
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 95px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 9px;
+        }
+
+        /* COMPONENT INFORMATION */
+
+        .component-info {
+            background: #f8faff;
+            border: 1px solid #e0e8ff;
+            border-radius: 11px;
+            padding: 23px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .component-info.visible {
+            display: block;
+        }
+
+        .component-info h4 {
+            margin: 0 0 20px;
+            font-size: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-box {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 17px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 9px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        /* STOCK PREVIEW */
+
+        .stock-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .preview-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        .preview-value {
+            font-size: 26px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .preview-note {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* BUTTONS */
+
+        .btn {
+            display: inline-block;
+            padding: 14px 24px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-green {
+            background: var(--green);
+        }
+
+        .btn-red {
+            background: var(--red);
+        }
+
+        .btn-gray {
+            background: #475569;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        /* ALERTS */
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #eaf0ff;
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #e7f8ef;
+            color: #166534;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background: #fff4e5;
+            color: #92400e;
+        }
+
+        /* STEP LABEL */
+
+        .step-label {
+            display: inline-block;
+            background: #e8eeff;
+            color: var(--primary);
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        /* HELP */
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .help-box {
+            padding: 22px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .help-box h4 {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        .help-box p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .operation-grid,
+            .info-grid,
+            .stock-preview,
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 96%;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>Smart Inventory</h1>
+
+        <p>Stock IN / Stock OUT Management</p>
+
+    </div>
+
+
+    <div class="container">
+
+        <!-- NAVIGATION -->
+
+        <div class="navigation">
+
+            <a href="{{ url_for('home') }}"
+               class="nav-button">
+                ← Dashboard
+            </a>
+
+            <a href="{{ url_for('inventory') }}"
+               class="nav-button">
+                View Inventory
+            </a>
+
+            <a href="{{ url_for('transactions') }}"
+               class="nav-button">
+                Transaction History
+            </a>
+
+        </div>
+
+
+        <!-- PAGE HEADING -->
+
+        <div class="page-heading">
+
+            <h2>Update Inventory Stock</h2>
+
+            <p>
+                Record new stock received or materials
+                issued from inventory.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="alert alert-error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- STOCK FORM -->
+
+        <form
+            method="POST"
+            action="{{ url_for('stock') }}"
+            id="stockForm"
+        >
+
+            <!-- STEP 1 -->
+
+            <div class="card">
+
+                <div class="step-label">
+                    STEP 1
+                </div>
+
+                <h3>Select Stock Operation</h3>
+
+                <p class="description">
+                    Choose whether you are receiving
+                    components or issuing them from inventory.
+                </p>
+
+
+                <div class="operation-grid">
+
+                    <!-- STOCK IN -->
+
+                    <button
+                        type="button"
+                        id="stockInButton"
+                        class="operation-button active-in"
+                        onclick="selectOperation('IN')"
+                        aria-pressed="true"
+                    >
+
+                        <div class="operation-icon">
+                            📥
+                        </div>
+
+                        <div class="operation-title green-text">
+                            Stock IN
+                        </div>
+
+                        <div class="operation-description">
+                            Use this when new components
+                            are received and added to inventory.
+                        </div>
+
+                    </button>
+
+
+                    <!-- STOCK OUT -->
+
+                    <button
+                        type="button"
+                        id="stockOutButton"
+                        class="operation-button"
+                        onclick="selectOperation('OUT')"
+                        aria-pressed="false"
+                    >
+
+                        <div class="operation-icon">
+                            📤
+                        </div>
+
+                        <div class="operation-title red-text">
+                            Stock OUT
+                        </div>
+
+                        <div class="operation-description">
+                            Use this when components
+                            are issued for production
+                            or removed from inventory.
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                <!-- VALUE SENT TO FLASK -->
+
+                <input
+                    type="hidden"
+                    name="transaction_type"
+                    id="transactionType"
+                    value="IN"
+                >
+
+                <div
+                    class="alert alert-success"
+                    id="operationMessage"
+                    style="margin-top: 24px; margin-bottom: 0;"
+                >
+
+                    <strong>Stock IN Selected:</strong>
+                    The entered quantity will be added
+                    to the component's current stock.
+
+                </div>
+
+            </div>
+
+
+            <!-- STEP 2 -->
+
+            <div class="card">
+
+                <div class="step-label">
+                    STEP 2
+                </div>
+
+                <h3>Select Component</h3>
+
+                <p class="description">
+                    Search for the component you want to update.
+                </p>
+
+
+                <!-- SEARCH COMPONENT -->
+
+                <div class="form-group">
+
+                    <label for="componentSearch">
+                        Search Inventory
+                    </label>
+
+                    <input
+                        type="text"
+                        id="componentSearch"
+                        placeholder="Search by part number or component name..."
+                        autocomplete="off"
+                    >
+
+                    <div class="form-hint">
+                        Enter a component name or internal part number.
+                    </div>
+
+                </div>
+
+
+                <!-- COMPONENT DROPDOWN -->
+
+                <div class="form-group">
+
+                    <label for="componentSelect">
+                        Choose Component
+                    </label>
+
+                    <select
+                        id="componentSelect"
+                        name="component_id"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Component --
+                        </option>
+
+                        {% for component in components %}
+
+                        <option
+                            value="{{ component.id }}"
+                            data-part="{{ component.part_number }}"
+                            data-name="{{ component.component_name }}"
+                            data-stock="{{ component.quantity }}"
+                        >
+
+                            {{ component.part_number }}
+                            —
+                            {{ component.component_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- SELECTED COMPONENT DETAILS -->
+
+                <div
+                    class="component-info"
+                    id="componentInfo"
+                    aria-live="polite"
+                >
+
+                    <h4>Selected Component Details</h4>
+
+                    <div class="info-grid">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Part Number
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="selectedPart"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Component Description
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="selectedName"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Current Available Stock
+                            </div>
+
+                            <div
+                                class="info-value green-text"
+                                id="selectedStock"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Transaction Type
+                            </div>
+
+                            <div
+                                class="info-value"
+                                id="selectedOperation"
+                            >
+                                Stock IN
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STEP 3 -->
+
+            <div class="card">
+
+                <div class="step-label">
+                    STEP 3
+                </div>
+
+                <h3>Enter Quantity</h3>
+
+                <p class="description">
+                    Enter the number of components
+                    to receive or issue.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="quantityInput">
+                        Transaction Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantityInput"
+                        name="quantity"
+                        min="1"
+                        step="1"
+                        placeholder="Example: 500"
+                        required
+                    >
+
+                    <div class="form-hint">
+                        Enter a positive whole number.
+                    </div>
+
+                </div>
+
+
+                <!-- STOCK CALCULATION PREVIEW -->
+
+                <h3>Stock Calculation Preview</h3>
+
+                <p class="description">
+                    Review the estimated stock balance
+                    before submitting the transaction.
+                </p>
+
+
+                <div class="stock-preview">
+
+                    <div class="preview-box">
+
+                        <div class="preview-label">
+                            Current Stock
+                        </div>
+
+                        <div
+                            class="preview-value"
+                            id="currentStockPreview"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-box">
+
+                        <div class="preview-label">
+                            Transaction Quantity
+                        </div>
+
+                        <div
+                            class="preview-value"
+                            id="transactionPreview"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-box">
+
+                        <div class="preview-label">
+                            Expected New Stock
+                        </div>
+
+                        <div
+                            class="preview-value green-text"
+                            id="newStockPreview"
+                        >
+                            —
+                        </div>
+
+                        <div class="preview-note">
+                            Preview only — not yet saved
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="alert alert-error"
+                    id="stockWarning"
+                    style="display: none; margin-top: 20px;"
+                    role="alert"
+                >
+
+                    Insufficient stock.
+                    You cannot issue more components
+                    than the available quantity.
+
+                </div>
+
+
+                <div
+                    class="alert alert-info"
+                    style="margin-top: 23px; margin-bottom: 0;"
+                >
+
+                    The inventory quantity will change
+                    only after you confirm and submit
+                    this transaction.
+
+                </div>
+
+            </div>
+
+
+            <!-- STEP 4 -->
+
+            <div class="card">
+
+                <div class="step-label">
+                    STEP 4
+                </div>
+
+                <h3>Remarks & Confirmation</h3>
+
+                <p class="description">
+                    Add a note explaining why the stock
+                    is being received or issued.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="remarksInput">
+                        Transaction Remarks
+                    </label>
+
+                    <textarea
+                        id="remarksInput"
+                        name="remarks"
+                        placeholder="Example: Received 500 resistors from supplier / Issued 200 resistors for Ignitor production"
+                    ></textarea>
+
+                </div>
+
+
+                <div
+                    class="alert alert-warning"
+                    id="confirmationNote"
+                >
+
+                    <strong>Before Saving:</strong>
+                    Verify the component,
+                    operation type, and quantity.
+
+                    Once submitted, the stock transaction
+                    will be recorded in inventory history.
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        id="submitButton"
+                        class="btn btn-green"
+                    >
+
+                        Confirm Stock IN
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('inventory') }}"
+                        class="btn btn-gray"
+                    >
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+        <!-- HELP -->
+
+        <div class="card">
+
+            <h3>Understanding Stock Operations</h3>
+
+            <div class="help-grid">
+
+                <div class="help-box">
+
+                    <h4 class="green-text">
+                        📥 Stock IN
+                    </h4>
+
+                    <p>
+                        Use Stock IN when components
+                        are received from suppliers,
+                        returned to stores,
+                        or added through a verified
+                        stock adjustment.
+                    </p>
+
+                </div>
+
+
+                <div class="help-box">
+
+                    <h4 class="red-text">
+                        📤 Stock OUT
+                    </h4>
+
+                    <p>
+                        Use Stock OUT when components
+                        are issued for production,
+                        testing, consumption,
+                        or a verified stock adjustment.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        /*
+        ============================================
+        VARIABLES
+        ============================================
+        */
+
+        let currentOperation = "IN";
+
+        let currentStock = null;
+
+        const componentSelect =
+            document.getElementById("componentSelect");
+
+        const componentSearch =
+            document.getElementById("componentSearch");
+
+        const quantityInput =
+            document.getElementById("quantityInput");
+
+        const stockForm =
+            document.getElementById("stockForm");
+
+        const originalOptions =
+            Array.from(componentSelect.options);
+
+
+        /*
+        ============================================
+        SELECT STOCK IN OR STOCK OUT
+        ============================================
+        */
+
+        function selectOperation(operation) {
+
+            currentOperation = operation;
+
+            document.getElementById(
+                "transactionType"
+            ).value = operation;
+
+            const inButton =
+                document.getElementById("stockInButton");
+
+            const outButton =
+                document.getElementById("stockOutButton");
+
+            const message =
+                document.getElementById("operationMessage");
+
+            const submitButton =
+                document.getElementById("submitButton");
+
+            const selectedOperation =
+                document.getElementById("selectedOperation");
+
+
+            inButton.classList.remove("active-in");
+
+            outButton.classList.remove("active-out");
+
+            inButton.setAttribute(
+                "aria-pressed",
+                operation === "IN"
+            );
+
+            outButton.setAttribute(
+                "aria-pressed",
+                operation === "OUT"
+            );
+
+
+            if (operation === "IN") {
+
+                inButton.classList.add("active-in");
+
+                message.className =
+                    "alert alert-success";
+
+                message.innerHTML =
+                    "<strong>Stock IN Selected:</strong> " +
+                    "The entered quantity will be added " +
+                    "to the component's current stock.";
+
+                submitButton.textContent =
+                    "Confirm Stock IN";
+
+                submitButton.className =
+                    "btn btn-green";
+
+                selectedOperation.textContent =
+                    "Stock IN";
+
+            } else {
+
+                outButton.classList.add("active-out");
+
+                message.className =
+                    "alert alert-warning";
+
+                message.innerHTML =
+                    "<strong>Stock OUT Selected:</strong> " +
+                    "The entered quantity will be deducted " +
+                    "from the component's current stock.";
+
+                submitButton.textContent =
+                    "Confirm Stock OUT";
+
+                submitButton.className =
+                    "btn btn-red";
+
+                selectedOperation.textContent =
+                    "Stock OUT";
+
+            }
+
+            updateStockPreview();
+
+        }
+
+
+        /*
+        ============================================
+        SEARCH INVENTORY COMPONENTS
+        ============================================
+
+        Rebuild the dropdown using original option
+        elements. This avoids unreliable option
+        hiding behavior in some browsers.
+        */
+
+        function searchComponents() {
+
+            const searchText =
+                componentSearch.value.trim().toLowerCase();
+
+            const selectedId = componentSelect.value;
+
+            const matchingOptions = originalOptions.filter(
+                function(option) {
+
+                    if (option.value === "") {
+                        return true;
+                    }
+
+                    const part = (
+                        option.dataset.part || ""
+                    ).toLowerCase();
+
+                    const name = (
+                        option.dataset.name || ""
+                    ).toLowerCase();
+
+                    return (
+                        part.includes(searchText) ||
+                        name.includes(searchText) ||
+                        option.value === selectedId
+                    );
+
+                }
+            );
+
+            componentSelect.replaceChildren(
+                ...matchingOptions.map(function(option) {
+                    return option.cloneNode(true);
+                })
+            );
+
+            componentSelect.value = selectedId;
+
+            if (componentSelect.selectedIndex === -1) {
+                componentSelect.value = "";
+            }
+
+        }
+
+
+        /*
+        ============================================
+        UPDATE SELECTED COMPONENT DETAILS
+        ============================================
+        */
+
+        function updateComponentInfo() {
+
+            const selectedOption =
+                componentSelect.options[
+                    componentSelect.selectedIndex
+                ];
+
+            const componentInfo =
+                document.getElementById("componentInfo");
+
+            if (
+                !selectedOption ||
+                !selectedOption.value
+            ) {
+
+                currentStock = null;
+
+                componentInfo.classList.remove("visible");
+
+                updateStockPreview();
+
+                return;
+
+            }
+
+            const partNumber =
+                selectedOption.dataset.part || "";
+
+            const componentName =
+                selectedOption.dataset.name || "";
+
+            currentStock = Number(
+                selectedOption.dataset.stock
+            );
+
+            document.getElementById(
+                "selectedPart"
+            ).textContent = partNumber;
+
+            document.getElementById(
+                "selectedName"
+            ).textContent = componentName;
+
+            document.getElementById(
+                "selectedStock"
+            ).textContent = formatNumber(currentStock);
+
+            componentInfo.classList.add("visible");
+
+            updateStockPreview();
+
+        }
+
+
+        /*
+        ============================================
+        NUMBER FORMATTING
+        ============================================
+        */
+
+        function formatNumber(value) {
+
+            if (!Number.isFinite(value)) {
+                return "—";
+            }
+
+            return value.toLocaleString("en-IN");
+
+        }
+
+
+        /*
+        ============================================
+        STOCK PREVIEW CALCULATION
+        ============================================
+        */
+
+        function updateStockPreview() {
+
+            const quantityText =
+                quantityInput.value.trim();
+
+            const quantity = Number(quantityText);
+
+            const currentStockPreview =
+                document.getElementById(
+                    "currentStockPreview"
+                );
+
+            const transactionPreview =
+                document.getElementById(
+                    "transactionPreview"
+                );
+
+            const newStockPreview =
+                document.getElementById(
+                    "newStockPreview"
+                );
+
+            const stockWarning =
+                document.getElementById(
+                    "stockWarning"
+                );
+
+            const validQuantity =
+                quantityText !== "" &&
+                Number.isSafeInteger(quantity) &&
+                quantity > 0;
+
+            currentStockPreview.textContent =
+                currentStock === null
+                    ? "—"
+                    : formatNumber(currentStock);
+
+            transactionPreview.textContent =
+                validQuantity
+                    ? (
+                        currentOperation === "IN"
+                            ? "+"
+                            : "-"
+                    ) + formatNumber(quantity)
+                    : "—";
+
+            stockWarning.style.display = "none";
+
+            newStockPreview.classList.remove(
+                "red-text"
+            );
+
+            newStockPreview.classList.add(
+                "green-text"
+            );
+
+            if (
+                currentStock === null ||
+                !validQuantity
+            ) {
+
+                newStockPreview.textContent = "—";
+
+                return;
+
+            }
+
+            let newStock;
+
+            if (currentOperation === "IN") {
+
+                newStock = currentStock + quantity;
+
+            } else {
+
+                newStock = currentStock - quantity;
+
+            }
+
+            newStockPreview.textContent =
+                formatNumber(newStock);
+
+            if (newStock < 0) {
+
+                newStockPreview.classList.remove(
+                    "green-text"
+                );
+
+                newStockPreview.classList.add(
+                    "red-text"
+                );
+
+                stockWarning.style.display = "block";
+
+            }
+
+        }
+
+
+        /*
+        ============================================
+        HANDLE STOCK FORM SUBMISSION
+        ============================================
+        */
+
+        stockForm.addEventListener(
+            "submit",
+            function(event) {
+
+                const componentId =
+                    componentSelect.value;
+
+                const quantity =
+                    Number(quantityInput.value);
+
+                if (!componentId) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please select an inventory component."
+                    );
+
+                    return;
+
+                }
+
+                if (
+                    !Number.isSafeInteger(quantity) ||
+                    quantity <= 0
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter a valid positive whole number."
+                    );
+
+                    return;
+
+                }
+
+                if (
+                    currentOperation === "OUT" &&
+                    (
+                        currentStock === null ||
+                        quantity > currentStock
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Insufficient stock. " +
+                        "The issue quantity cannot exceed " +
+                        "available inventory."
+                    );
+
+                    return;
+
+                }
+
+                const selectedOption =
+                    componentSelect.options[
+                        componentSelect.selectedIndex
+                    ];
+
+                const partNumber =
+                    selectedOption.dataset.part || "";
+
+                const action =
+                    currentOperation === "IN"
+                        ? "ADD"
+                        : "REMOVE";
+
+                const message =
+                    "Please confirm this transaction:\n\n" +
+                    "Component: " + partNumber + "\n" +
+                    "Operation: Stock " + currentOperation + "\n" +
+                    "Quantity: " + formatNumber(quantity) + "\n\n" +
+                    "This will " + action +
+                    " the quantity in inventory.\n\n" +
+                    "Do you want to continue?";
+
+                if (!confirm(message)) {
+
+                    event.preventDefault();
+
+                }
+
+            }
+        );
+
+
+        /*
+        ============================================
+        EVENT LISTENERS
+        ============================================
+        */
+
+        componentSearch.addEventListener(
+            "input",
+            searchComponents
+        );
+
+        componentSelect.addEventListener(
+            "change",
+            updateComponentInfo
+        );
+
+        quantityInput.addEventListener(
+            "input",
+            updateStockPreview
+        );
+
+
+        /*
+        ============================================
+        OPTIONAL COMPONENT PRESELECTION
+        ============================================
+
+        Supports URLs such as:
+
+        /stock?component_id=5
+
+        This does not change the Flask backend.
+        */
+
+        const urlParams =
+            new URLSearchParams(window.location.search);
+
+        const requestedComponentId =
+            urlParams.get("component_id");
+
+        if (requestedComponentId) {
+
+            const componentExists =
+                originalOptions.some(function(option) {
+
+                    return (
+                        option.value === requestedComponentId
+                    );
+
+                });
+
+            if (componentExists) {
+
+                componentSelect.value =
+                    requestedComponentId;
+
+            }
+
+        }
+
+        updateComponentInfo();
+
+        updateStockPreview();
+
+    </script>
+
+</body>
+
+</html>

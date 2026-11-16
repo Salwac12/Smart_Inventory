@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Component | Smart Inventory</title>
+
+    <style>
+
+        :root {
+            --background: #f4f6fa;
+            --white: #ffffff;
+            --text: #192336;
+            --muted: #718096;
+            --primary: #3159d9;
+            --green: #15966d;
+            --red: #dc4b53;
+            --border: #e5eaf1;
+            --dark: #172033;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 25px 35px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            width: 94%;
+            max-width: 1050px;
+            margin: 30px auto;
+        }
+
+        /* NAVIGATION */
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            background: white;
+            color: #334155;
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background: #edf2ff;
+            color: var(--primary);
+        }
+
+        /* PAGE HEADING */
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .page-heading h2 {
+            font-size: 28px;
+            margin: 0 0 9px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 28px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin: 0 0 12px;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 0 24px;
+        }
+
+        /* STEP LABEL */
+
+        .step-label {
+            display: inline-block;
+            background: #e8eeff;
+            color: var(--primary);
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .required {
+            color: var(--red);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            color: var(--text);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(49, 89, 217, 0.08);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 95px;
+        }
+
+        .form-hint {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-top: 9px;
+        }
+
+        /* BOM INFORMATION */
+
+        .bom-info {
+            background: #eaf0ff;
+            border: 1px solid #d6e2ff;
+            border-radius: 11px;
+            padding: 23px;
+            margin-bottom: 25px;
+        }
+
+        .bom-info h3 {
+            font-size: 17px;
+            color: #1e40af;
+            margin: 0 0 12px;
+        }
+
+        .bom-info p {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #334155;
+            margin: 8px 0;
+        }
+
+        .bom-info strong {
+            color: #192336;
+        }
+
+        /* INFORMATION BOX */
+
+        .info-box {
+            background: #f8faff;
+            border: 1px solid #e0e8ff;
+            border-radius: 9px;
+            padding: 19px;
+            margin-top: 10px;
+        }
+
+        .info-box p {
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* STOCK PREVIEW */
+
+        .stock-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        .preview-box {
+            background: #f8fafc;
+            padding: 21px;
+            border-radius: 10px;
+        }
+
+        .preview-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .preview-value {
+            font-size: 25px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .text-green {
+            color: var(--green);
+        }
+
+        /* ALERTS */
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .alert-info {
+            background: #eaf0ff;
+            color: #1e40af;
+        }
+
+        /* BUTTONS */
+
+        .btn {
+            display: inline-block;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-green {
+            background: var(--green);
+        }
+
+        .btn-gray {
+            background: #475569;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 25px;
+        }
+
+        /* FOOTER HELP */
+
+        .help-box {
+            background: #f8fafc;
+            border-radius: 9px;
+            padding: 22px;
+        }
+
+        .help-box p {
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.9;
+            margin: 8px 0;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 96%;
+            }
+
+            .form-grid,
+            .stock-preview {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 22px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <h1>Smart Inventory</h1>
+
+        <p>Electronic Component Registration</p>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- NAVIGATION -->
+
+        <div class="navigation">
+
+            <a href="{{ url_for('home') }}"
+               class="nav-button">
+
+                ← Dashboard
+
+            </a>
+
+            <a href="{{ url_for('inventory') }}"
+               class="nav-button">
+
+                View Inventory
+
+            </a>
+
+            <a href="{{ url_for('stock') }}"
+               class="nav-button">
+
+                Stock IN / OUT
+
+            </a>
+
+            {% if request.args.get('bom_id') %}
+
+            <a
+                href="{{ url_for(
+                    'match_bom',
+                    bom_id=request.args.get('bom_id')
+                ) }}"
+                class="nav-button"
+            >
+
+                ← Back to BOM Matching
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- PAGE HEADING -->
+
+        <div class="page-heading">
+
+            <h2>Add New Component</h2>
+
+            <p>
+                Register a new electronic component in your
+                inventory database.
+            </p>
+
+        </div>
+
+
+        <!-- ERROR MESSAGE -->
+
+        {% if error %}
+
+        <div class="alert alert-error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- BOM PREFILL INFORMATION -->
+
+        {% if request.args.get('description') %}
+
+        <div class="bom-info">
+
+            <h3>📋 Component From Customer BOM</h3>
+
+            <p>
+                This component was selected from
+                your BOM Matching page.
+            </p>
+
+            <p>
+                <strong>BOM Description:</strong>
+
+                {{ request.args.get('description') }}
+            </p>
+
+            {% if request.args.get('type_pack') %}
+
+            <p>
+                <strong>Type / Package:</strong>
+
+                {{ request.args.get('type_pack') }}
+            </p>
+
+            {% endif %}
+
+            {% if request.args.get('make') %}
+
+            <p>
+                <strong>Manufacturer / Make:</strong>
+
+                {{ request.args.get('make') }}
+            </p>
+
+            {% endif %}
+
+            <p>
+                The component description below
+                has been filled automatically.
+                Verify the details before saving.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ADD COMPONENT FORM -->
+
+        <form
+            method="POST"
+            action="{{ url_for('add_component') }}"
+            id="addComponentForm"
+        >
+
+            <!-- SECTION 1 -->
+
+            <section class="card">
+
+                <div class="step-label">
+                    SECTION 1
+                </div>
+
+                <h3>Component Identification</h3>
+
+                <p class="description">
+                    Enter the unique part number and
+                    description of the electronic component.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="partNumber">
+
+                        Internal Part Number
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partNumber"
+                        name="part_number"
+                        placeholder="Example: RES-4K7-0805"
+                        maxlength="100"
+                        value="{{ request.form.get('part_number', '') }}"
+                        required
+                        autofocus
+                    >
+
+                    <div class="form-hint">
+                        Use a unique internal part number
+                        for each component.
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="componentName">
+
+                        Component Description
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <textarea
+                        id="componentName"
+                        name="component_name"
+                        placeholder="Example: Resistor SMD 4.7K Ohm 5% 0805"
+                        maxlength="500"
+                        required
+                    >{{ request.form.get('component_name', request.args.get('description', '')) }}</textarea>
+
+                    <div class="form-hint">
+                        Include important specifications
+                        such as value, tolerance, package,
+                        voltage rating, or manufacturer
+                        when applicable.
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Component Category
+                    </label>
+
+                    {% set selected_category = request.form.get('category', '') %}
+
+                    <select
+                        id="category"
+                        name="category"
+                    >
+
+                        <option value="">
+                            -- Select Category --
+                        </option>
+
+                        {% for category_name in [
+                            'Resistor',
+                            'Capacitor',
+                            'Inductor',
+                            'Diode',
+                            'Transistor',
+                            'MOSFET',
+                            'Integrated Circuit (IC)',
+                            'Microcontroller',
+                            'Connector',
+                            'Relay',
+                            'Switch',
+                            'LED',
+                            'Sensor',
+                            'Transformer',
+                            'Fuse',
+                            'PCB',
+                            'Mechanical Component',
+                            'Other'
+                        ] %}
+
+                        <option
+                            value="{{ category_name }}"
+                            {% if selected_category == category_name %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ category_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <div class="form-hint">
+                        Select the category that best
+                        describes the component.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SECTION 2 -->
+
+            <section class="card">
+
+                <div class="step-label">
+                    SECTION 2
+                </div>
+
+                <h3>Supplier & Pricing Details</h3>
+
+                <p class="description">
+                    Enter the supplier and purchase price
+                    information for this component.
+                </p>
+
+
+                <div class="form-grid">
+
+
+                    <!-- SUPPLIER -->
+
+                    <div class="form-group">
+
+                        <label for="supplier">
+                            Supplier Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="supplier"
+                            name="supplier"
+                            placeholder="Example: ABC Electronics"
+                            maxlength="200"
+                            value="{{ request.form.get('supplier', '') }}"
+                        >
+
+                        <div class="form-hint">
+                            Enter the supplier from whom
+                            you normally purchase this component.
+                        </div>
+
+                    </div>
+
+
+                    <!-- UNIT PRICE -->
+
+                    <div class="form-group">
+
+                        <label for="unitPrice">
+
+                            Unit Price (₹)
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="unitPrice"
+                            name="unit_price"
+                            min="0"
+                            step="0.01"
+                            placeholder="Example: 0.50"
+                            value="{{ request.form.get('unit_price', '0') }}"
+                            required
+                        >
+
+                        <div class="form-hint">
+                            Price of one component in rupees.
+                            Enter 0 if the price is not yet known.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <p>
+                        <strong>Note:</strong>
+                        The manufacturer shown in a customer BOM
+                        and the supplier you purchase from
+                        may be different companies.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SECTION 3 -->
+
+            <section class="card">
+
+                <div class="step-label">
+                    SECTION 3
+                </div>
+
+                <h3>Stock Information</h3>
+
+                <p class="description">
+                    Enter the initial stock quantity
+                    and minimum stock level.
+                </p>
+
+
+                <div class="form-grid">
+
+
+                    <!-- OPENING STOCK -->
+
+                    <div class="form-group">
+
+                        <label for="quantity">
+
+                            Opening Stock Quantity
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            min="0"
+                            step="1"
+                            value="{{ request.form.get('quantity', '0') }}"
+                            required
+                        >
+
+                        <div class="form-hint">
+                            Enter the number of components
+                            currently available in your store.
+                            Use 0 for a newly registered
+                            component with no stock.
+                        </div>
+
+                    </div>
+
+
+                    <!-- MINIMUM STOCK -->
+
+                    <div class="form-group">
+
+                        <label for="minimumStock">
+
+                            Minimum Stock Level
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="minimumStock"
+                            name="minimum_stock"
+                            min="0"
+                            step="1"
+                            value="{{ request.form.get('minimum_stock', request.form.get('min_stock', '0')) }}"
+                            required
+                        >
+
+                        <!--
+                        Compatibility with backend versions
+                        that read the field as min_stock.
+                        -->
+
+                        <input
+                            type="hidden"
+                            id="minStockCompatibility"
+                            name="min_stock"
+                            value="{{ request.form.get('minimum_stock', request.form.get('min_stock', '0')) }}"
+                        >
+
+                        <div class="form-hint">
+                            The system will flag this component
+                            when available stock falls
+                            to or below this level.
+                            A quantity of zero is shown as
+                            Out of Stock.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- STOCK SUMMARY -->
+
+                <h3>Opening Stock Preview</h3>
+
+                <p class="description">
+                    Review the initial stock information
+                    before saving.
+                </p>
+
+
+                <div class="stock-preview">
+
+                    <div class="preview-box">
+
+                        <div class="preview-label">
+                            Opening Quantity
+                        </div>
+
+                        <div
+                            class="preview-value text-green"
+                            id="quantityPreview"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-box">
+
+                        <div class="preview-label">
+                            Stock Status
+                        </div>
+
+                        <div
+                            class="preview-value"
+                            id="stockStatusPreview"
+                        >
+                            Out of Stock
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="alert alert-info"
+                    style="margin-top: 23px; margin-bottom: 0;"
+                >
+
+                    <strong>Important:</strong>
+
+                    If you enter an opening quantity
+                    greater than zero, your existing system
+                    may record an opening Stock IN transaction
+                    when the component is created.
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SECTION 4 -->
+
+            <section class="card">
+
+                <div class="step-label">
+                    SECTION 4
+                </div>
+
+                <h3>Review & Save Component</h3>
+
+                <p class="description">
+                    Verify the details before saving
+                    the component to your inventory database.
+                </p>
+
+
+                <div class="help-box">
+
+                    <p>
+                        <strong>Part Number:</strong>
+                        Must be unique.
+                    </p>
+
+                    <p>
+                        <strong>Description:</strong>
+                        Include the correct electronic
+                        component specifications.
+                    </p>
+
+                    <p>
+                        <strong>Opening Quantity:</strong>
+                        Must match your actual available stock.
+                    </p>
+
+                    <p>
+                        <strong>Minimum Stock:</strong>
+                        Used for low-stock alerts.
+                    </p>
+
+                </div>
+
+
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        id="saveButton"
+                        class="btn btn-green"
+                    >
+
+                        Save Component →
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('inventory') }}"
+                        class="btn btn-gray"
+                    >
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </form>
+
+
+        <!-- HELP -->
+
+        <section class="card">
+
+            <h3>What Happens After Saving?</h3>
+
+            <p class="description">
+                The new component will be registered
+                in your inventory database.
+            </p>
+
+            <div class="help-box">
+
+                <p>
+                    <strong>1.</strong>
+                    The component becomes available
+                    in your Inventory Management page.
+                </p>
+
+                <p>
+                    <strong>2.</strong>
+                    You can perform Stock IN
+                    and Stock OUT operations.
+                </p>
+
+                <p>
+                    <strong>3.</strong>
+                    The component can be selected
+                    during BOM Inventory Matching.
+                </p>
+
+                <p>
+                    <strong>4.</strong>
+                    Its stock quantity can be used
+                    in Material Requirement Calculations.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        /*
+        ==========================================
+        ELEMENT REFERENCES
+        ==========================================
+        */
+
+        const addComponentForm =
+            document.getElementById("addComponentForm");
+
+        const quantityInput =
+            document.getElementById("quantity");
+
+        const minimumStockInput =
+            document.getElementById("minimumStock");
+
+        const minStockCompatibility =
+            document.getElementById("minStockCompatibility");
+
+        const unitPriceInput =
+            document.getElementById("unitPrice");
+
+        const quantityPreview =
+            document.getElementById("quantityPreview");
+
+        const stockStatusPreview =
+            document.getElementById("stockStatusPreview");
+
+        const saveButton =
+            document.getElementById("saveButton");
+
+
+        /*
+        ==========================================
+        FORMAT NUMBERS
+        ==========================================
+        */
+
+        function formatNumber(value) {
+
+            if (!Number.isFinite(value)) {
+                return "—";
+            }
+
+            return value.toLocaleString("en-IN");
+
+        }
+
+
+        /*
+        ==========================================
+        UPDATE STOCK PREVIEW
+        ==========================================
+        */
+
+        function updateStockPreview() {
+
+            const quantity =
+                Number(quantityInput.value);
+
+            const minimumStock =
+                Number(minimumStockInput.value);
+
+            // Keep both backend-compatible
+            // minimum stock fields synchronized.
+
+            minStockCompatibility.value =
+                minimumStockInput.value;
+
+            const validQuantity =
+                quantityInput.value.trim() !== "" &&
+                Number.isSafeInteger(quantity) &&
+                quantity >= 0;
+
+            const validMinimum =
+                minimumStockInput.value.trim() !== "" &&
+                Number.isSafeInteger(minimumStock) &&
+                minimumStock >= 0;
+
+            if (!validQuantity || !validMinimum) {
+
+                quantityPreview.textContent = "—";
+
+                stockStatusPreview.textContent =
+                    "Enter Valid Quantity";
+
+                stockStatusPreview.style.color =
+                    "#dc4b53";
+
+                return;
+
+            }
+
+            quantityPreview.textContent =
+                formatNumber(quantity);
+
+            if (quantity === 0) {
+
+                stockStatusPreview.textContent =
+                    "Out of Stock";
+
+                stockStatusPreview.style.color =
+                    "#dc4b53";
+
+            } else if (quantity <= minimumStock) {
+
+                stockStatusPreview.textContent =
+                    "Low Stock";
+
+                stockStatusPreview.style.color =
+                    "#d97706";
+
+            } else {
+
+                stockStatusPreview.textContent =
+                    "Sufficient Stock";
+
+                stockStatusPreview.style.color =
+                    "#15966d";
+
+            }
+
+        }
+
+
+        /*
+        ==========================================
+        FORM VALIDATION
+        ==========================================
+        */
+
+        addComponentForm.addEventListener(
+            "submit",
+            function(event) {
+
+                const partNumber =
+                    document.getElementById("partNumber")
+                    .value.trim();
+
+                const componentName =
+                    document.getElementById("componentName")
+                    .value.trim();
+
+                const quantity =
+                    Number(quantityInput.value);
+
+                const minimumStock =
+                    Number(minimumStockInput.value);
+
+                const unitPrice =
+                    Number(unitPriceInput.value);
+
+                // Synchronize compatibility field.
+
+                minStockCompatibility.value =
+                    minimumStockInput.value;
+
+
+                if (!partNumber) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter the component part number."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!componentName) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter the component description."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !Number.isSafeInteger(quantity) ||
+                    quantity < 0 ||
+                    quantityInput.value.trim() === ""
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Opening quantity must be a non-negative whole number."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !Number.isSafeInteger(minimumStock) ||
+                    minimumStock < 0 ||
+                    minimumStockInput.value.trim() === ""
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Minimum stock must be a non-negative whole number."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !Number.isFinite(unitPrice) ||
+                    unitPrice < 0 ||
+                    unitPriceInput.value.trim() === ""
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter a valid unit price."
+                    );
+
+                    return;
+
+                }
+
+
+                const confirmationMessage =
+                    "Please confirm the new component:\n\n" +
+                    "Part Number: " + partNumber + "\n" +
+                    "Description: " + componentName + "\n" +
+                    "Opening Stock: " +
+                    formatNumber(quantity) + "\n" +
+                    "Minimum Stock: " +
+                    formatNumber(minimumStock) + "\n" +
+                    "Unit Price: ₹" +
+                    unitPrice.toFixed(2) + "\n\n" +
+                    "Save this component to inventory?";
+
+
+                if (!confirm(confirmationMessage)) {
+
+                    event.preventDefault();
+
+                    return;
+
+                }
+
+                saveButton.disabled = true;
+
+                saveButton.textContent =
+                    "Saving Component...";
+
+            }
+        );
+
+
+        /*
+        ==========================================
+        EVENT LISTENERS
+        ==========================================
+        */
+
+        quantityInput.addEventListener(
+            "input",
+            updateStockPreview
+        );
+
+        minimumStockInput.addEventListener(
+            "input",
+            updateStockPreview
+        );
+
+
+        /*
+        ==========================================
+        INITIAL PREVIEW
+        ==========================================
+        */
+
+        updateStockPreview();
+
+    </script>
+
+</body>
+
+</html>

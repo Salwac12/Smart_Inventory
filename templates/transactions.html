@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Transaction History | Smart Inventory</title>
+
+    <style>
+        :root {
+            --background: #f4f6fa;
+            --white: #ffffff;
+            --text: #192336;
+            --muted: #718096;
+            --primary: #3159d9;
+            --green: #15966d;
+            --red: #dc4b53;
+            --border: #e5eaf1;
+            --dark: #172033;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 25px 35px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1500px;
+            margin: 30px auto;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .nav-button {
+            background: white;
+            color: #334155;
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-button:hover {
+            background: #edf2ff;
+            color: var(--primary);
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .page-heading h2 {
+            font-size: 28px;
+            margin: 0 0 9px;
+        }
+
+        .page-heading p {
+            font-size: 14px;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-green {
+            background: var(--green);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .summary-value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .text-green {
+            color: var(--green);
+        }
+
+        .text-red {
+            color: var(--red);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 27px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin: 0 0 12px;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .filter-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .search-input,
+        .date-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .filter-button {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            color: #475569;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .filter-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f5f7fb;
+            padding: 16px;
+            text-align: left;
+            color: #64748b;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fafbff;
+        }
+
+        .part-number {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .component-name {
+            font-weight: bold;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-in {
+            background: #e7f8ef;
+            color: #166534;
+        }
+
+        .badge-out {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .quantity-in {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .quantity-out {
+            color: var(--red);
+            font-weight: bold;
+        }
+
+        .results-info {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            background: #eaf0ff;
+            color: #1e40af;
+            padding: 17px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        .empty-state h4 {
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid,
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: 96%;
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>Smart Inventory</h1>
+        <p>Inventory Transaction History</p>
+    </header>
+
+    <main class="container">
+
+        <div class="navigation">
+
+            <a href="{{ url_for('home') }}"
+               class="nav-button">
+                ← Dashboard
+            </a>
+
+            <a href="{{ url_for('inventory') }}"
+               class="nav-button">
+                View Inventory
+            </a>
+
+            <a href="{{ url_for('stock') }}"
+               class="nav-button">
+                Stock IN / OUT
+            </a>
+
+        </div>
+
+        <div class="page-heading">
+
+            <div>
+                <h2>Transaction History</h2>
+
+                <p>
+                    View and search all recorded stock movements.
+                </p>
+            </div>
+
+            <a href="{{ url_for('stock') }}"
+               class="btn btn-primary">
+
+                + New Stock Transaction
+            </a>
+
+        </div>
+
+
+        <!--
+        ==========================================
+        BACKEND VARIABLE COMPATIBILITY
+        ==========================================
+
+        Different versions of app.py may send
+        transaction records under different names.
+
+        This section checks common variable names.
+
+        It does not modify database records.
+        -->
+
+
+        {% if transactions is defined and transactions is not none %}
+
+            {% set transaction_records = transactions %}
+
+        {% elif history is defined and history is not none %}
+
+            {% set transaction_records = history %}
+
+        {% elif transaction_history is defined
+                and transaction_history is not none %}
+
+            {% set transaction_records = transaction_history %}
+
+        {% elif stock_transactions is defined
+                and stock_transactions is not none %}
+
+            {% set transaction_records = stock_transactions %}
+
+        {% elif records is defined and records is not none %}
+
+            {% set transaction_records = records %}
+
+        {% else %}
+
+            {% set transaction_records = [] %}
+
+        {% endif %}
+
+
+        <!-- SUMMARY CALCULATION -->
+
+        {% set summary = namespace(
+            total=0,
+            stock_in=0,
+            stock_out=0
+        ) %}
+
+        {% for transaction in transaction_records %}
+
+            {% set summary.total = summary.total + 1 %}
+
+            {% if transaction.transaction_type == "IN" %}
+
+                {% set summary.stock_in = summary.stock_in + 1 %}
+
+            {% elif transaction.transaction_type == "OUT" %}
+
+                {% set summary.stock_out = summary.stock_out + 1 %}
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Total Transactions
+                </div>
+
+                <div class="summary-value">
+                    {{ summary.total }}
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Stock IN Transactions
+                </div>
+
+                <div class="summary-value text-green">
+                    {{ summary.stock_in }}
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Stock OUT Transactions
+                </div>
+
+                <div class="summary-value text-red">
+                    {{ summary.stock_out }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TRANSACTION LIST -->
+
+        <section class="card">
+
+            <h3>Stock Movement Records</h3>
+
+            <p class="description">
+                Search by part number, component name,
+                transaction ID, or remarks.
+            </p>
+
+
+            <!-- SEARCH FILTER -->
+
+            <div class="filter-section">
+
+                <div>
+
+                    <label for="transactionSearch">
+                        Search Transactions
+                    </label>
+
+                    <input
+                        type="text"
+                        id="transactionSearch"
+                        class="search-input"
+                        placeholder="Search part number, component, remarks..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label for="dateFilter">
+                        Filter by Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateFilter"
+                        class="date-input"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- TYPE FILTERS -->
+
+            <div class="filter-bar">
+
+                <button
+                    type="button"
+                    class="filter-button active"
+                    data-filter="all"
+                >
+                    All Transactions ({{ summary.total }})
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-filter="IN"
+                >
+                    Stock IN ({{ summary.stock_in }})
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-filter="OUT"
+                >
+                    Stock OUT ({{ summary.stock_out }})
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    id="clearFilters"
+                >
+                    Clear Filters
+                </button>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <strong>Stock IN:</strong>
+                Materials received and added to inventory.
+
+                <br>
+
+                <strong>Stock OUT:</strong>
+                Materials issued or removed from inventory.
+
+                <br>
+
+                All successful stock transactions should
+                appear below when supplied by the backend.
+
+            </div>
+
+
+            <div class="results-info">
+
+                Showing
+
+                <strong id="visibleCount">
+                    {{ summary.total }}
+                </strong>
+
+                of {{ summary.total }} transactions
+
+            </div>
+
+
+            <!-- TRANSACTION TABLE -->
+
+            <div class="table-wrapper">
+
+                <table id="transactionTable">
+
+                    <thead>
+
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Date & Time</th>
+                            <th>Part Number</th>
+                            <th>Component</th>
+                            <th>Type</th>
+                            <th>Quantity</th>
+                            <th>Remarks</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for transaction in transaction_records %}
+
+                        <tr
+                            class="transaction-row"
+
+                            data-type="{{ transaction.transaction_type }}"
+
+                            data-date="{{ (transaction.transaction_date|string)[:10] }}"
+
+                            data-search="{{ (
+                                (transaction.part_number|default('', true)) ~ ' ' ~
+                                (transaction.component_name|default('', true)) ~ ' ' ~
+                                (transaction.remarks|default('', true)) ~ ' ' ~
+                                (transaction.id|default('', true))
+                            )|lower|e }}"
+                        >
+
+                            <!-- TRANSACTION ID -->
+
+                            <td>
+                                #{{ transaction.id }}
+                            </td>
+
+
+                            <!-- DATE -->
+
+                            <td>
+                                {{ transaction.transaction_date }}
+                            </td>
+
+
+                            <!-- PART NUMBER -->
+
+                            <td class="part-number">
+                                {{ transaction.part_number|default('—', true) }}
+                            </td>
+
+
+                            <!-- COMPONENT NAME -->
+
+                            <td class="component-name">
+                                {{ transaction.component_name|default('—', true) }}
+                            </td>
+
+
+                            <!-- TRANSACTION TYPE -->
+
+                            <td>
+
+                                {% if transaction.transaction_type == "IN" %}
+
+                                    <span class="status-badge badge-in">
+                                        ↓ Stock IN
+                                    </span>
+
+                                {% elif transaction.transaction_type == "OUT" %}
+
+                                    <span class="status-badge badge-out">
+                                        ↑ Stock OUT
+                                    </span>
+
+                                {% else %}
+
+                                    {{ transaction.transaction_type }}
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- QUANTITY -->
+
+                            <td>
+
+                                {% if transaction.transaction_type == "IN" %}
+
+                                    <span class="quantity-in">
+
+                                        +{{ transaction.quantity }}
+
+                                    </span>
+
+                                {% elif transaction.transaction_type == "OUT" %}
+
+                                    <span class="quantity-out">
+
+                                        -{{ transaction.quantity }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    {{ transaction.quantity }}
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- REMARKS -->
+
+                            <td>
+                                {{ transaction.remarks|default('—', true) }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- NO MATCHES AFTER FILTERING -->
+
+            <div
+                id="noResults"
+                class="empty-state hidden"
+            >
+
+                <h4>No Matching Transactions</h4>
+
+                <p>
+                    Try another search term or clear your filters.
+                </p>
+
+            </div>
+
+
+            <!-- NO RECORDS RETURNED -->
+
+            {% if summary.total == 0 %}
+
+            <div class="empty-state">
+
+                <h4>No Transactions Displayed</h4>
+
+                <p>
+                    The current page received no transaction records.
+                </p>
+
+                <p>
+                    If you previously recorded Stock IN or Stock OUT,
+                    those records may still exist in your database.
+                </p>
+
+                <p>
+                    This page does not delete transaction history.
+                </p>
+
+                <a href="{{ url_for('stock') }}"
+                   class="btn btn-primary">
+
+                    Open Stock Management
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        let activeTypeFilter = "all";
+
+        const searchInput =
+            document.getElementById("transactionSearch");
+
+        const dateInput =
+            document.getElementById("dateFilter");
+
+        const rows =
+            document.querySelectorAll(".transaction-row");
+
+        const filterButtons =
+            document.querySelectorAll(
+                ".filter-button[data-filter]"
+            );
+
+        const visibleCountElement =
+            document.getElementById("visibleCount");
+
+        const noResults =
+            document.getElementById("noResults");
+
+
+        /*
+        ==========================================
+        FILTER TRANSACTIONS
+        ==========================================
+        */
+
+        function filterTransactions() {
+
+            const searchText =
+                searchInput.value.trim().toLowerCase();
+
+            const selectedDate =
+                dateInput.value;
+
+            let visibleCount = 0;
+
+            rows.forEach(function(row) {
+
+                const transactionText =
+                    row.dataset.search || "";
+
+                const transactionType =
+                    row.dataset.type || "";
+
+                const transactionDate =
+                    row.dataset.date || "";
+
+                const matchesSearch =
+                    transactionText.includes(searchText);
+
+                const matchesType =
+                    activeTypeFilter === "all" ||
+                    transactionType === activeTypeFilter;
+
+                const matchesDate =
+                    selectedDate === "" ||
+                    transactionDate === selectedDate;
+
+                const shouldShow =
+                    matchesSearch &&
+                    matchesType &&
+                    matchesDate;
+
+                row.classList.toggle(
+                    "hidden",
+                    !shouldShow
+                );
+
+                if (shouldShow) {
+                    visibleCount++;
+                }
+
+            });
+
+            visibleCountElement.textContent =
+                visibleCount;
+
+            noResults.classList.toggle(
+                "hidden",
+                visibleCount !== 0 || rows.length === 0
+            );
+
+        }
+
+
+        /*
+        ==========================================
+        STOCK IN / OUT FILTER BUTTONS
+        ==========================================
+        */
+
+        filterButtons.forEach(function(button) {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    activeTypeFilter =
+                        button.dataset.filter;
+
+                    filterButtons.forEach(
+                        function(item) {
+
+                            item.classList.remove("active");
+
+                        }
+                    );
+
+                    button.classList.add("active");
+
+                    filterTransactions();
+
+                }
+            );
+
+        });
+
+
+        /*
+        ==========================================
+        CLEAR FILTERS
+        ==========================================
+        */
+
+        document.getElementById(
+            "clearFilters"
+        ).addEventListener(
+            "click",
+            function() {
+
+                searchInput.value = "";
+
+                dateInput.value = "";
+
+                activeTypeFilter = "all";
+
+                filterButtons.forEach(
+                    function(button) {
+
+                        button.classList.remove("active");
+
+                    }
+                );
+
+                const allButton =
+                    document.querySelector(
+                        '.filter-button[data-filter="all"]'
+                    );
+
+                if (allButton) {
+                    allButton.classList.add("active");
+                }
+
+                filterTransactions();
+
+            }
+        );
+
+
+        /*
+        ==========================================
+        SEARCH AND DATE EVENTS
+        ==========================================
+        */
+
+        searchInput.addEventListener(
+            "input",
+            filterTransactions
+        );
+
+        dateInput.addEventListener(
+            "change",
+            filterTransactions
+        );
+
+        filterTransactions();
+
+    </script>
+
+</body>
+</html>

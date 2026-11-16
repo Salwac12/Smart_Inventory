@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Smart Inventory</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        :root {
+            --sidebar: #172033;
+            --sidebar-hover: #26334a;
+            --background: #f4f6fa;
+            --card: #ffffff;
+            --text: #192336;
+            --muted: #718096;
+            --border: #e5eaf1;
+            --primary: #3159d9;
+            --primary-hover: #2448bc;
+            --green: #15966d;
+            --red: #dc4b53;
+            --orange: #e59b35;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 245px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--sidebar);
+            padding: 28px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 8px 12px 30px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 25px;
+        }
+
+        .brand-name {
+            color: white;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 9px;
+            line-height: 1.5;
+        }
+
+        .nav-heading {
+            color: #718096;
+            font-size: 11px;
+            letter-spacing: 1.2px;
+            font-weight: bold;
+            padding: 0 13px;
+            margin: 24px 0 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            padding: 14px 13px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 245px;
+            padding: 32px;
+            max-width: 1900px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 27px;
+            font-weight: bold;
+            margin: 0 0 7px;
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #167b58;
+            background: #e7f7ef;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        /* SUMMARY CARDS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-title {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .stat-icon {
+            width: 47px;
+            height: 47px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .icon-blue {
+            background: #eaf0ff;
+        }
+
+        .icon-orange {
+            background: #fff4e5;
+        }
+
+        .icon-red {
+            background: #ffecee;
+        }
+
+        .icon-green {
+            background: #e5f8ef;
+        }
+
+        /* SECTION HEADERS */
+
+        .section-heading {
+            margin: 33px 0 17px;
+        }
+
+        .section-heading h2 {
+            font-size: 20px;
+            margin: 0 0 7px;
+        }
+
+        .section-heading p {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ACTION CARDS */
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .action-card {
+            background: var(--card);
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.2s;
+        }
+
+        .action-card:hover {
+            border-color: #b7c6f7;
+            box-shadow: 0 6px 18px rgba(20, 36, 75, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 51px;
+            height: 51px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            border-radius: 11px;
+            background: #eef2ff;
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            font-size: 17px;
+            margin: 0 0 10px;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 0 0 22px;
+            flex-grow: 1;
+        }
+
+        .action-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .action-button:hover {
+            background: var(--primary-hover);
+        }
+
+        .action-button.green {
+            background: var(--green);
+        }
+
+        .action-button.green:hover {
+            background: #107d5b;
+        }
+
+        /* WORKFLOW */
+
+        .workflow-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 26px;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .workflow-step {
+            position: relative;
+            background: #f8faff;
+            border: 1px solid #e9eef8;
+            border-radius: 10px;
+            padding: 19px;
+        }
+
+        .step-number {
+            display: inline-flex;
+            width: 31px;
+            height: 31px;
+            background: #dfe7ff;
+            color: var(--primary);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 13px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .workflow-step h3 {
+            font-size: 14px;
+            margin: 0 0 8px;
+        }
+
+        .workflow-step p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--muted);
+            margin: 0 0 12px;
+        }
+
+        .workflow-step a {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* OTHER SECTIONS */
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 24px;
+            min-width: 0;
+        }
+
+        .panel h2 {
+            font-size: 17px;
+            margin: 0 0 7px;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 0 0 23px;
+        }
+
+        .chart-container {
+            height: 275px;
+            position: relative;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--muted);
+            background: #f8fafc;
+            padding: 12px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .type-in {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .type-out {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 25px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1300px) {
+
+            .action-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .workflow-steps {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+        @media (max-width: 760px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+
+            .brand {
+                margin-bottom: 10px;
+                padding-bottom: 14px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .stats-grid,
+            .action-grid,
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-name">
+                Smart Inventory
+            </div>
+
+            <div class="brand-subtitle">
+                Inventory & Material Planning
+            </div>
+
+        </div>
+
+        <div class="nav-heading">
+            MAIN
+        </div>
+
+        <a href="{{ url_for('home') }}"
+           class="nav-link active">
+
+            <span class="nav-icon">▦</span>
+            Dashboard
+
+        </a>
+
+
+        <div class="nav-heading">
+            INVENTORY
+        </div>
+
+        <a href="{{ url_for('inventory') }}"
+           class="nav-link">
+
+            <span class="nav-icon">▤</span>
+            View Inventory
+
+        </a>
+
+        <a href="{{ url_for('add_component') }}"
+           class="nav-link">
+
+            <span class="nav-icon">＋</span>
+            Add Component
+
+        </a>
+
+        <a href="{{ url_for('stock') }}"
+           class="nav-link">
+
+            <span class="nav-icon">⇄</span>
+            Stock IN / OUT
+
+        </a>
+
+        <a href="{{ url_for('transactions') }}"
+           class="nav-link">
+
+            <span class="nav-icon">≡</span>
+            Transactions
+
+        </a>
+
+
+        <div class="nav-heading">
+            BOM & PLANNING
+        </div>
+
+        <a href="{{ url_for('upload_bom') }}"
+           class="nav-link">
+
+            <span class="nav-icon">↑</span>
+            Upload BOM
+
+        </a>
+
+        <a href="{{ url_for('saved_boms') }}"
+           class="nav-link">
+
+            <span class="nav-icon">▣</span>
+            Saved BOMs
+
+        </a>
+
+        <a href="{{ url_for('saved_boms') }}"
+           class="nav-link">
+
+            <span class="nav-icon">▥</span>
+            Material Planning
+
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1 class="page-title">
+                    Dashboard
+                </h1>
+
+                <p class="page-subtitle">
+                    Manage your inventory and plan production materials.
+                </p>
+
+            </div>
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                System Active
+
+            </div>
+
+        </div>
+
+
+        <!-- INVENTORY SUMMARY -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Total Components
+                    </div>
+
+                    <div class="stat-value">
+                        {{ total_components }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-blue">
+                    📦
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Low Stock Items
+                    </div>
+
+                    <div class="stat-value">
+                        {{ low_stock }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-orange">
+                    ⚠️
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Out of Stock
+                    </div>
+
+                    <div class="stat-value">
+                        {{ out_of_stock }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-red">
+                    ⛔
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Total Stock Quantity
+                    </div>
+
+                    <div class="stat-value">
+                        {{ "{:,}".format(total_stock) }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-green">
+                    📊
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Inventory Value
+                    </div>
+
+                    <div class="stat-value">
+                        ₹{{ "{:,.2f}".format(inventory_value) }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-blue">
+                    ₹
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div>
+
+                    <div class="stat-title">
+                        Stock Transactions
+                    </div>
+
+                    <div class="stat-value">
+                        {{ total_transactions }}
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-green">
+                    ⇄
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="section-heading">
+
+            <h2>
+                What would you like to do?
+            </h2>
+
+            <p>
+                Choose an activity to get started.
+            </p>
+
+        </div>
+
+        <div class="action-grid">
+
+
+            <!-- INVENTORY -->
+
+            <div class="action-card">
+
+                <div class="action-icon">
+                    📦
+                </div>
+
+                <h3>
+                    Manage Inventory
+                </h3>
+
+                <p>
+                    View all components, check quantities,
+                    and manage available stock.
+                </p>
+
+                <a href="{{ url_for('inventory') }}"
+                   class="action-button">
+
+                    Open Inventory →
+
+                </a>
+
+            </div>
+
+
+            <!-- UPLOAD BOM -->
+
+            <div class="action-card">
+
+                <div class="action-icon">
+                    📄
+                </div>
+
+                <h3>
+                    Upload New BOM
+                </h3>
+
+                <p>
+                    Upload your Excel BOM and save
+                    the product's component requirements.
+                </p>
+
+                <a href="{{ url_for('upload_bom') }}"
+                   class="action-button">
+
+                    Upload Excel BOM →
+
+                </a>
+
+            </div>
+
+
+            <!-- MATERIAL PLANNING -->
+
+            <div class="action-card">
+
+                <div class="action-icon">
+                    📋
+                </div>
+
+                <h3>
+                    Plan Production Materials
+                </h3>
+
+                <p>
+                    Select a saved BOM, calculate shortages,
+                    and download the purchase requirement Excel.
+                </p>
+
+                <a href="{{ url_for('saved_boms') }}"
+                   class="action-button green">
+
+                    Start Material Planning →
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- WORKFLOW -->
+
+        <div class="section-heading">
+
+            <h2>
+                How Material Planning Works
+            </h2>
+
+            <p>
+                Follow these four steps to calculate materials
+                required for production.
+            </p>
+
+        </div>
+
+        <div class="workflow-card">
+
+            <div class="workflow-steps">
+
+
+                <div class="workflow-step">
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <h3>
+                        Upload BOM
+                    </h3>
+
+                    <p>
+                        Upload a customer's Excel BOM
+                        and save it.
+                    </p>
+
+                    <a href="{{ url_for('upload_bom') }}">
+                        Upload BOM →
+                    </a>
+
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <h3>
+                        Match Components
+                    </h3>
+
+                    <p>
+                        Link BOM components with
+                        your inventory records.
+                    </p>
+
+                    <a href="{{ url_for('saved_boms') }}">
+                        Select BOM →
+                    </a>
+
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <h3>
+                        Calculate Shortages
+                    </h3>
+
+                    <p>
+                        Enter production quantity
+                        and check available stock.
+                    </p>
+
+                    <a href="{{ url_for('saved_boms') }}">
+                        Calculate →
+                    </a>
+
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <div class="step-number">
+                        4
+                    </div>
+
+                    <h3>
+                        Download Excel
+                    </h3>
+
+                    <p>
+                        Download the list of
+                        components to purchase.
+                    </p>
+
+                    <a href="{{ url_for('saved_boms') }}">
+                        Start Planning →
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- STOCK CHART & TRANSACTIONS -->
+
+        <div class="lower-grid">
+
+
+            <div class="panel">
+
+                <h2>
+                    Stock Movement
+                </h2>
+
+                <p class="panel-subtitle">
+                    Stock IN and OUT during the last seven days.
+                </p>
+
+                <div class="chart-container">
+                    <canvas id="stockChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>
+                    Recent Transactions
+                </h2>
+
+                <p class="panel-subtitle">
+                    Your five latest stock movements.
+                </p>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Part Number</th>
+                                <th>Type</th>
+                                <th>Quantity</th>
+                                <th>Date</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for transaction in recent_transactions %}
+
+                            <tr>
+
+                                <td>
+                                    {{ transaction.part_number }}
+                                </td>
+
+                                <td>
+
+                                    {% if transaction.transaction_type == "IN" %}
+
+                                    <span class="type-in">
+                                        IN
+                                    </span>
+
+                                    {% else %}
+
+                                    <span class="type-out">
+                                        OUT
+                                    </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {{ transaction.quantity }}
+                                </td>
+
+                                <td>
+                                    {{ transaction.transaction_date }}
+                                </td>
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+
+                                <td colspan="4" class="empty">
+                                    No transactions yet.
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- CHART JAVASCRIPT -->
+
+    <script>
+
+        const chartLabels = {{ chart_labels | tojson }};
+
+        const stockInData = {{ stock_in_data | tojson }};
+
+        const stockOutData = {{ stock_out_data | tojson }};
+
+        const canvas = document.getElementById("stockChart");
+
+        if (canvas && typeof Chart !== "undefined") {
+
+            new Chart(canvas, {
+
+                type: "bar",
+
+                data: {
+
+                    labels: chartLabels,
+
+                    datasets: [
+
+                        {
+                            label: "Stock IN",
+                            data: stockInData,
+                            backgroundColor: "#15966d",
+                            borderRadius: 5
+                        },
+
+                        {
+                            label: "Stock OUT",
+                            data: stockOutData,
+                            backgroundColor: "#dc4b53",
+                            borderRadius: 5
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            position: "top"
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+                            beginAtZero: true
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>

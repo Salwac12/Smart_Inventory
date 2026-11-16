@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Inventory Matching - Smart Inventory</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        header {
+            background: #1e293b;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1600px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            margin: 0 8px 12px 0;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .blue {
+            background: #2563eb;
+        }
+
+        .gray {
+            background: #475569;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        .purple {
+            background: #7c3aed;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 9px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 0;
+        }
+
+        .summary-card .number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1250px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #334155;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        select {
+            width: 100%;
+            min-width: 230px;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .matched {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .unmatched {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .add-button:hover {
+            background: #1d4ed8;
+        }
+
+        .saved-label {
+            color: #15803d;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .save-button {
+            padding: 14px 26px;
+            font-size: 15px;
+            margin-top: 25px;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 700px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+<header>
+
+    <h1>AI Smart Inventory Management</h1>
+
+    <p>BOM Inventory Matching</p>
+
+</header>
+
+<div class="container">
+
+    <!-- NAVIGATION -->
+
+    <a href="{{ url_for('home') }}"
+       class="btn blue">
+        ← Dashboard
+    </a>
+
+    <a href="{{ url_for('saved_boms') }}"
+       class="btn gray">
+        Saved BOMs
+    </a>
+
+    <a href="{{ url_for('view_saved_bom', bom_id=bom.id) }}"
+       class="btn gray">
+        View BOM
+    </a>
+
+    <a href="{{ url_for('calculate_materials', bom_id=bom.id) }}"
+       class="btn purple">
+        Calculate Materials
+    </a>
+
+
+    <!-- BOM INFORMATION -->
+
+    <div class="card">
+
+        <h2>{{ bom.product_name }}</h2>
+
+        <p>
+            <strong>Revision:</strong>
+            {{ bom.revision }}
+        </p>
+
+        <p>
+            <strong>BOM ID:</strong>
+            {{ bom.id }}
+        </p>
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <h3>Total BOM Components</h3>
+
+                <div class="number">
+                    {{ total_count }}
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Matched Components</h3>
+
+                <div class="number"
+                     style="color: #15803d;">
+                    {{ matched_count }}
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Unmatched Components</h3>
+
+                <div class="number"
+                     style="color: #dc2626;">
+                    {{ unmatched_count }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MATCHING TABLE -->
+
+    <div class="card">
+
+        <h2>Match BOM Components With Inventory</h2>
+
+        <div class="info">
+
+            Select an existing inventory component
+            from the dropdown.
+
+            If a component is missing from inventory,
+            click <strong>Add to Inventory</strong>
+            to create a new inventory record.
+
+        </div>
+
+        <div class="warning">
+
+            <strong>Important:</strong>
+
+            Adding a component to inventory does not
+            automatically match it with the BOM.
+
+            After adding the component, return to this
+            page and select it from the dropdown.
+
+        </div>
+
+        {% if success %}
+
+        <div class="success">
+            Inventory matching saved successfully.
+        </div>
+
+        {% endif %}
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>BOM Description</th>
+                            <th>Qty/PCB</th>
+                            <th>Type/Pack</th>
+                            <th>Make</th>
+                            <th>Select Inventory Component</th>
+                            <th>Match Status</th>
+                            <th>Available Stock</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in bom_items %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.sr_no }}
+                            </td>
+
+                            <td>
+                                {{ item.description }}
+                            </td>
+
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+
+                            <td>
+                                {{ item.type_pack }}
+                            </td>
+
+                            <td>
+                                {{ item.make }}
+                            </td>
+
+                            <td>
+
+                                <select
+                                    name="component_{{ item.id }}"
+                                >
+
+                                    <option value="">
+                                        -- Not Matched --
+                                    </option>
+
+                                    {% for component in inventory_components %}
+
+                                    <option
+                                        value="{{ component.id }}"
+
+                                        {% if item.component_id == component.id %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ component.part_number }}
+                                        -
+                                        {{ component.component_name }}
+                                        (Stock: {{ component.quantity }})
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </td>
+
+                            <td>
+
+                                {% if item.component_id is not none %}
+
+                                <span class="matched">
+                                    Matched
+                                </span>
+
+                                {% else %}
+
+                                <span class="unmatched">
+                                    Not Matched
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if item.component_id is not none %}
+
+                                    {{ item.available_stock }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ADD COMPONENT BUTTON -->
+
+                            <td>
+
+                                {% if item.component_id is none %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'add_component',
+                                        description=item.description,
+                                        type_pack=item.type_pack,
+                                        make=item.make,
+                                        bom_id=bom.id
+                                    ) }}"
+                                    class="add-button"
+                                >
+
+                                    + Add to Inventory
+
+                                </a>
+
+                                {% else %}
+
+                                <span class="saved-label">
+                                    Inventory Linked
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn green save-button"
+            >
+                Save Inventory Matches
+            </button>
+
+        </form>
+
+        <p class="note">
+
+            Verify electrical specifications,
+            package type, manufacturer, and ratings
+            before linking any inventory component
+            to a BOM item.
+
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
