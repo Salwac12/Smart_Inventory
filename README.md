@@ -1,5 +1,14 @@
 # Smart Inventory & BOM Management System
 
+### 🌐 Live Website
+
+🚀 **[CLICK HERE TO OPEN SMART INVENTORY SYSTEM](https://smart-inventory-salwac12.vercel.app/)**
+
+A web-based inventory and Bill of Materials (BOM) management system developed using Python Flask, PostgreSQL, HTML, CSS, and JavaScript.
+
+
+# Smart Inventory & BOM Management System
+
 A web-based Inventory and Bill of Materials (BOM) Management System developed using Python, Flask, SQLite, HTML, CSS, and JavaScript.
 
 The application is designed to simplify electronic component inventory management and production material planning for electronics manufacturing businesses.
@@ -143,25 +152,3 @@ Potential enhancements include user authentication, role-based access control, a
 ## Project Purpose
 
 This project demonstrates practical applications of Python web development, database management, electronic component inventory tracking, and production material planning.
-## Application Screenshots
-
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
-
-### Inventory Management
-![Inventory Management](screenshots/inventory.png)
-
-### Stock IN / OUT
-![Stock Management](screenshots/stock.png)
-
-### Transaction History
-![Transaction History](screenshots/transactions.png)
-
-### BOM Upload
-![BOM Upload](screenshots/bom_upload.png)
-
-### BOM Inventory Matching
-![BOM Matching](screenshots/bom_matching.png)
-
-### Material Requirement Planning
-![Material Planning](screenshots/material_planning.png)
