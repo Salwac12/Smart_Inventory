@@ -143,3 +143,25 @@ Potential enhancements include user authentication, role-based access control, a
 ## Project Purpose
 
 This project demonstrates practical applications of Python web development, database management, electronic component inventory tracking, and production material planning.
+## Application Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Inventory Management
+![Inventory Management](screenshots/inventory.png)
+
+### Stock IN / OUT
+![Stock Management](screenshots/stock.png)
+
+### Transaction History
+![Transaction History](screenshots/transactions.png)
+
+### BOM Upload
+![BOM Upload](screenshots/bom_upload.png)
+
+### BOM Inventory Matching
+![BOM Matching](screenshots/bom_matching.png)
+
+### Material Requirement Planning
+![Material Planning](screenshots/material_planning.png)
